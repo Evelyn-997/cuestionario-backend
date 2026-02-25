@@ -54,10 +54,10 @@ public class QuizSubmissionService {
 
         for(var ans: request.answers()){
             Option option = optionRespository.findById(ans.optionId())
-                    .orElseThrow();
+                    .orElseThrow(() -> new BadRequestException("Opción no encontrada: " + ans.optionId()));
 
             // Validar que esa opción pertenece al quiz (vía pregunta->quiz)
-            Long optionQuizId = Long.valueOf(option.getQuestion().getQuiz().getId());
+            Long optionQuizId = option.getQuestion().getQuiz().getId();
             if (!optionQuizId.equals(quiz.getId())) {
                 throw new BadRequestException("La opción " + option.getId() + " no pertenece a este cuestionario.");
             }
